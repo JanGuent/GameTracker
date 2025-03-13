@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Player Statistics</h1>
+
+    <!-- Form to select a user -->
+    <form method="POST">
+        <label for="user_id">Select Player:</label>
+        <select name="user_id" id="user_id">
+            <option value="">Choose Player</option>
+            {% for user in users %}
+                <option value="{{ user.id }}" {% if selected_user and selected_user.id == user.id %}selected{% endif %}>{{ user.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">View Stats</button>
+    </form>
+
+    {% if selected_user %}
+        <h2 class="PlayerStatsText">Statistics for {{ selected_user.name }}</h2>
+        <p class="PlayerStatsText"><strong>Total Games Played:</strong> {{ total_games }}</p>
+        <p class="PlayerStatsText"><strong>Games Won:</strong> {{ games_won }}</p>
+        <p class="PlayerStatsText"><strong>Win Percentage:</strong> {{ win_percentage|round(2) }}%</p>
+
+        <!-- Pie Chart Canvas -->
+        <canvas id="winChart"></canvas>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            // Chart Data
+            const data = {
+                labels: ["Games Won", "Games Lost"],
+                datasets: [{
+                    data: [{{ games_won }}, {{ total_games - games_won }}],
+                    backgroundColor: ["#4CAF50", "#FF5733"]
+                }]
+            };
+
+            // Chart Configuration
+            const config = {
+                type: "pie",
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                color: "#fff"
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Render Chart
+            new Chart(document.getElementById("winChart"), config);
+        </script>
+    {% endif %}
+
+{% endblock %}

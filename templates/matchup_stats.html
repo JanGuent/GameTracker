@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Matchup Statistics</h1>
+
+<div class="charts-container">
+    {% for matchup in matchup_data %}
+        <div class="matchup-container">
+            <h2>Matchup: {{ ', '.join(matchup.players) }}</h2>
+            <p>Total games played: {{ matchup.total_games }}</p>
+            <canvas id="chart-{{ loop.index }}"></canvas>
+        </div>
+
+        <script>
+            const ctx{{ loop.index }} = document.getElementById('chart-{{ loop.index }}').getContext('2d');
+            new Chart(ctx{{ loop.index }}, {
+                type: 'pie',
+                data: {
+                    labels: {{ matchup.players | tojson }},
+                    datasets: [{
+                        data: {{ matchup.win_data | tojson }},
+                        backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"]
+                    }]
+                }
+            });
+        </script>
+    {% endfor %}
+</div>
+
+{% endblock %}

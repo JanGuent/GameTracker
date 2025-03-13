@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, User, Game
 from datetime import datetime
+from collections import Counter
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -71,6 +73,59 @@ def add_game():
     users = User.query.all()
     return render_template('add_game.html', users=users, selected_players=selected_players, winner_id=winner_id, amount=amount)
 
+@app.route('/player_stats', methods=['GET', 'POST'])
+def player_stats():
+    users = User.query.all()
+    selected_user = None
+    win_percentage = None
+    total_games = 0
+    games_won = 0
+
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+
+        if user_id:
+            selected_user = User.query.get(user_id)
+            total_games = Game.query.filter(Game.players.like(f"%{user_id}%")).count()  # Games where the user participated
+            games_won = Game.query.filter_by(winner_id=user_id).count()  # Games won by the user
+            win_percentage = (games_won / total_games * 100) if total_games > 0 else 0  # Avoid division by zero
+
+    return render_template('player_stats.html', users=users, selected_user=selected_user, total_games=total_games, games_won=games_won, win_percentage=win_percentage)
+
+@app.route('/matchup_stats', methods=['GET'])
+def matchup_stats():
+    all_games = Game.query.all()
+    user_mapping = {str(user.id): user.name for user in User.query.all()}
+
+    # Extract unique matchups
+    unique_matchups = set()
+    matchup_data = []
+
+    for game in all_games:
+        player_ids = tuple(sorted(game.players.split(",")))  # Sort to avoid duplicates
+        unique_matchups.add(player_ids)
+
+    for matchup in unique_matchups:
+        relevant_games = [game for game in all_games if set(game.players.split(",")) == set(matchup)]
+        total_games = len(relevant_games)
+        
+        win_counts = Counter()
+        for game in relevant_games:
+            win_counts[str(game.winner_id)] += 1  # Convert winner_id to string for comparison
+
+        matchup_labels = [user_mapping[player_id] for player_id in matchup]
+        win_data = [win_counts[player_id] for player_id in matchup]
+
+        matchup_data.append({
+            "players": matchup_labels,
+            "total_games": total_games,
+            "win_data": win_data
+        })
+
+    # Sort matchups by total_games in descending order
+    matchup_data.sort(key=lambda x: x['total_games'], reverse=True)
+
+    return render_template('matchup_stats.html', matchup_data=matchup_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
