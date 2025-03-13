@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Ranking of Users by Games Won</h1>
+
+    <!-- Chart Container -->
+    <div class="chart-container">
+        <canvas id="rankingChart" width="600" height="300"></canvas>
+    </div>
+
+    <script>
+        // Get the rankings data from Flask (passed as JSON)
+        const rankings = {{ rankings|tojson }};
+        
+        // Extract labels (user names) and data (game wins)
+        const labels = rankings.map(ranking => ranking.name); // User names
+        const data = rankings.map(ranking => ranking.wins); // Number of wins
+    
+        // Create the chart using Chart.js
+        const ctx = document.getElementById('rankingChart').getContext('2d');
+        const rankingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,  // Labels (User names)
+                datasets: [{
+                    label: 'Amount of won games',
+                    data: data,  // Number of wins
+                    backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.raw + " Wins";
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,  // Start the y-axis at 0
+                        ticks: {
+                            stepSize: 1  // Step size for ticks (e.g., 1, 2, 3...)
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

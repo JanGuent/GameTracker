@@ -1,0 +1,254 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+}
+
+header nav a {
+    color: #e0e0e0;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    color: #a1c4fd;
+}
+
+h1 {
+    color: #e0e0e0;
+    text-align: center;
+}
+
+/* Table Styles */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #282828;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #444;
+    text-align: left;
+}
+
+table th {
+    background-color: #444;
+    color: #fff;
+}
+
+table tr:nth-child(even) {
+    background-color: #333;
+}
+
+table tr:hover {
+    background-color: #555;
+}
+
+/* Form Styles */
+form {
+    max-width: 500px;  /* Set a max-width for the form container */
+    margin: 20px auto;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;  /* Ensure the form doesn't exceed max-width */
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"] {
+    width: 100%;
+    max-width: 100%;  /* Ensure input fields take up full width within the form */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #555;
+    background-color: #444;
+    color: #e0e0e0;
+    border-radius: 4px;
+    box-sizing: border-box;  /* Ensure padding doesn't affect width calculation */
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form input[type="date"]:focus {
+    border-color: #a1c4fd;
+}
+
+form button {
+    background-color: #444;
+    color: #e0e0e0;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+/* General Button Styles */
+button, a {
+    background-color: #444;
+    color: #e0e0e0;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+button:hover, a:hover {
+    background-color: #555;
+}
+
+@media (max-width: 600px) {
+    form {
+        width: 90%;  /* Make the form container 90% wide on small screens */
+    }
+}
+
+.chart-container {
+    width: 80%;  /* Adjust the width of the container */
+    max-width: 800px;  /* Limit the width on large screens */
+    margin: 30px auto;  /* Center the chart container */
+    background-color: #222;  /* Set a dark background for the chart container */
+    padding: 20px;  /* Add some padding around the chart */
+    border-radius: 10px;  /* Round the corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);  /* Add shadow for depth */
+}
+
+.chart-container canvas {
+    display: block;  /* Make the canvas a block element for centering */
+    margin: 0 auto;  /* Center the canvas inside the container */
+}
+
+/* Tooltip Styling (Optional, customize appearance of tooltips) */
+.tooltip {
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+select {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 200px;
+    margin: 10px 0;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+select:focus {
+    outline: none;
+    border-color: #0088cc; /* Light blue border when focused */
+    background-color: #444;
+}
+
+/* Style the labels for dropdowns */
+label {
+    color: #fff;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 20px;
+}
+
+/* Style the container around the dropdowns */
+div {
+    margin-bottom: 20px;
+}
+
+/* Style the submit button */
+button {
+    background-color: #0088cc;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #006699;
+}
+
+/* Style the success message */
+p {
+    color: #00cc66;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+/* Style the back button */
+a button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+a button:hover {
+    background-color: #444;
+}
+
+/* Style the form */
+form {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+form div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+form select {
+    width: 30%;
+}
+
+/* Make sure the page layout is responsive */
+@media screen and (max-width: 768px) {
+    form div {
+        flex-direction: column;
+    }
+
+    form select {
+        width: 100%;
+    }
+}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Add a Game</h1>
+    <form method="POST" onsubmit="return validateForm()">
+        <div>
+            <label for="players">Players:</label>
+            <select name="player1" id="player1">
+                <option value="">Select Player 1</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id in selected_players %}selected{% endif %}>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="player2" id="player2">
+                <option value="">Select Player 2</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id in selected_players %}selected{% endif %}>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="player3" id="player3">
+                <option value="">Select Player 3</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id in selected_players %}selected{% endif %}>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="player4" id="player4">
+                <option value="">Select Player 4</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id in selected_players %}selected{% endif %}>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="player5" id="player5">
+                <option value="">Select Player 5</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id in selected_players %}selected{% endif %}>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="winner">Winner:</label>
+            <select name="winner" id="winner">
+                <option value="">Select Winner</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if user.id == winner_id %}selected{% endif %}>{{ user.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="amount">Amount:</label>
+            <input type="number" name="amount" id="amount" value="1" min="1" max="100">
+        </div>
+
+        <button type="submit">Add Game</button>
+    </form>
+
+    <!-- Display success message -->
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    
+
+    <script>
+        // Function to update the winner dropdown based on selected players
+        function updateWinnerOptions() {
+            const players = [
+                document.getElementById('player1').value,
+                document.getElementById('player2').value,
+                document.getElementById('player3').value,
+                document.getElementById('player4').value,
+                document.getElementById('player5').value
+            ].filter(playerId => playerId !== "");
+
+            const winnerDropdown = document.getElementById('winner');
+            winnerDropdown.innerHTML = '<option value="">Select Winner</option>';  // Clear current options
+
+            players.forEach(playerId => {
+                const option = document.createElement('option');
+                option.value = playerId;
+                option.textContent = document.querySelector(`option[value='${playerId}']`).textContent;
+                winnerDropdown.appendChild(option);
+            });
+        }
+
+        // Add event listeners to update the winner dropdown when players are selected
+        document.querySelectorAll('select[name="player1"], select[name="player2"], select[name="player3"], select[name="player4"], select[name="player5"]').forEach(select => {
+            select.addEventListener('change', updateWinnerOptions);
+        });
+
+        // Form validation function
+        function validateForm() {
+            const selectedPlayers = [
+                document.getElementById('player1').value,
+                document.getElementById('player2').value,
+                document.getElementById('player3').value,
+                document.getElementById('player4').value,
+                document.getElementById('player5').value
+            ].filter(playerId => playerId !== "");  // Remove empty values
+
+            // Ensure at least two players are selected
+            if (selectedPlayers.length < 2) {
+                alert('Please select at least two players.');
+                return false;
+            }
+
+            // Ensure the winner is one of the selected players
+            const winner = document.getElementById('winner').value;
+            if (!selectedPlayers.includes(winner)) {
+                alert('Please select a winner from the participants.');
+                return false;
+            }
+
+            return true;  // Allow form submission
+        }
+    </script>
+{% endblock %}
