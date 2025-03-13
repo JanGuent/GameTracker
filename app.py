@@ -1,13 +1,66 @@
-from flask import Flask, render_template, request, redirect, url_for
-from models import db, User, Game
+from flask import Flask, render_template, request, redirect, url_for, flash
+from models import db, User, Game, Admin
 from datetime import datetime
 from collections import Counter
-import json
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key') 
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Admin.query.get(int(user_id))  # Use Admin model instead of User model
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash("You need to be logged in to access this page!", "warning")
+    return render_template('login.html', message="You need to be logged in to access this page!")
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        admin = Admin.query.filter_by(username=username).first()  # Check admin table
+
+        if admin and admin.check_password(password):  # Check password for admin
+            login_user(admin)
+            return redirect(url_for('index'))  # Redirect to home page after successful login
+        else:
+            return 'Invalid credentials'
+
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/register', methods=['GET', 'POST'])
+@login_required
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        admin = Admin(username=username)
+        admin.set_password(password)
+        db.session.add(admin)
+        db.session.commit()
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
 
 @app.route('/')
 def index():
@@ -23,6 +76,7 @@ def index():
     return render_template('index.html', rankings=rankings_data)
 
 @app.route('/add-user', methods=['GET', 'POST'])
+@login_required
 def add_user():
     if request.method == 'POST':
         name = request.form['name']
@@ -32,7 +86,9 @@ def add_user():
         return render_template('add_user.html', message="User added successfully!")
     return render_template('add_user.html')
 
+
 @app.route('/add_game', methods=['GET', 'POST'])
+@login_required
 def add_game():
     selected_players = []
     winner_id = None
