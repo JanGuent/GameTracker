@@ -1,15 +1,14 @@
-blinker @ file:///croot/blinker_1737448726027/work
-click @ file:///work/perseverance-python-buildout/croot/click_1728387069202/work
-Flask @ file:///croot/flask_1737454299809/work
-Flask-Login @ file:///work/perseverance-python-buildout/croot/flask-login_1728497332576/work
+blinker==1.9.0
+click==8.1.8
+dotenv==0.9.9
+Flask==3.1.0
+Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
-greenlet @ file:///croot/greenlet_1733860072744/work
-itsdangerous @ file:///io/buildout/croot/itsdangerous_1732920215085/work
-Jinja2 @ file:///croot/jinja2_1741710844255/work
-MarkupSafe @ file:///croot/markupsafe_1738584038848/work
-python-dotenv @ file:///work/perseverance-python-buildout/croot/python-dotenv_1728388189408/work
-setuptools==75.8.0
-SQLAlchemy @ file:///croot/sqlalchemy_1736565039440/work
-typing_extensions @ file:///croot/typing_extensions_1734714854207/work
-Werkzeug @ file:///croot/werkzeug_1737448706492/work
-wheel==0.45.1
+greenlet==3.1.1
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.2
+python-dotenv==1.0.1
+SQLAlchemy==2.0.39
+typing_extensions==4.12.2
+Werkzeug==3.1.3
