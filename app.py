@@ -49,7 +49,7 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def register():
     if request.method == 'POST':
         username = request.form['username']
